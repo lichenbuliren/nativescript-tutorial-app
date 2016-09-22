@@ -4,7 +4,6 @@ import { NativeScriptModule } from "nativescript-angular/platform";
 import { NativeScriptHttpModule } from 'nativescript-angular/http';
 import { NativeScriptRouterModule } from 'nativescript-angular/router';
 
-import { enableProdMode } from '@angular/core';
 import { AppComponent } from "./app.component";
 import { routes, navigatableComponents } from './app.routing';
 
