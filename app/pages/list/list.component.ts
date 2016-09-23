@@ -1,5 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
 import { TextField } from 'ui/text-field';
+import * as SocialShare from 'nativescript-social-share'
 
 import { Grocery } from '../../shared/grocery/grocery';
 import { GroceryListService } from '../../shared/grocery/grocery-list.service';
@@ -11,14 +12,15 @@ import { GroceryListService } from '../../shared/grocery/grocery-list.service';
   providers: [GroceryListService]
 })
 export class ListComponent implements OnInit {
-  groceryList: Array<Object> = [];
+  groceryList: Array<Grocery> = [];
   grocery = '';
   isLoading = false;
   listLoaded = false;
 
   @ViewChild('groceryTextField') groceryTextField: ElementRef;
 
-  constructor(private groceryListService: GroceryListService) {}
+  constructor(private groceryListService: GroceryListService,
+    private zone: NgZone) {}
 
   ngOnInit() {
     this.isLoading = true;
@@ -56,5 +58,24 @@ export class ListComponent implements OnInit {
           this.grocery = '';
         }
       );
+  }
+
+  delete(grocery: Grocery) {
+    this.groceryListService.delete(grocery.id)
+      .subscribe(() => {
+        this.zone.run(() => {
+          var index = this.groceryList.indexOf(grocery);
+          this.groceryList.splice(index, 1);
+        });
+      });
+  }
+
+  share() {
+    let list = [];
+    for (let i = 0, size = this.groceryList.length; i < size; i++) {
+      list.push(this.groceryList[i].name);
+    }
+    let listString = list.join(',').trim();
+    SocialShare.shareText(listString);
   }
 }

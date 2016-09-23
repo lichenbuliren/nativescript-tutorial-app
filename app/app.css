@@ -9,6 +9,11 @@ TextField {
   font-size: 13;
 }
 
+ActionBar {
+  background-color: black;
+  color: white;
+}
+
 .small-spacing {
   margin: 5;
 }
